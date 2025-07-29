@@ -1,6 +1,6 @@
 package io.github.dwivedyaakash.mystore.service
 
-import io.github.dwivedyaakash.mystore.model.StoreResponse
+import io.github.dwivedyaakash.mystore.model.Product
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
@@ -17,6 +17,8 @@ class ApiService {
             json(Json {
                 ignoreUnknownKeys = true
                 isLenient = true
+                prettyPrint = true
+                encodeDefaults = false
             })
         }
         install(Logging) {
@@ -26,8 +28,12 @@ class ApiService {
 
     private val baseUrl = "https://fakestoreapi.com"
 
-    suspend fun getProducts(): StoreResponse {
+    suspend fun getProducts(): List<Product> {
         return client.get("$baseUrl/products").body()
+    }
+
+    suspend fun getProductById(id: String): Product {
+        return client.get("$baseUrl/products/$id").body()
     }
 
     fun close() {

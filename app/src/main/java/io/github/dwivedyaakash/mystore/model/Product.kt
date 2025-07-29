@@ -1,6 +1,9 @@
 package io.github.dwivedyaakash.mystore.model
 
-data class StoreItem(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Product(
     val category: String,
     val description: String,
     val id: Int,
