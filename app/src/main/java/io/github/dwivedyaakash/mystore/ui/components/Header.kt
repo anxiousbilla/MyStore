@@ -11,12 +11,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Header() {
+fun Header(title: String) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp, bottom = 26.dp),
-        text = "Products",
+        text = title,
         fontSize = 28.sp,
         fontWeight = FontWeight.Bold,
         fontStyle = FontStyle.Italic
