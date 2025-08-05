@@ -18,7 +18,11 @@ import androidx.compose.ui.unit.dp
 import io.github.dwivedyaakash.mystore.model.Product
 
 @Composable
-fun ProductsGrid(products: List<Product>) {
+fun ProductsGrid(
+    products: List<Product>,
+    favourites: MutableList<Int>,
+    onFavouriteClick: (id: Int) -> Unit
+) {
 
     LazyVerticalGrid(
         state = rememberLazyGridState(),
@@ -36,7 +40,11 @@ fun ProductsGrid(products: List<Product>) {
                         .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
                         .padding(12.dp),
                 ) {
-                    ProductCard(product)
+                    ProductCard(
+                        product,
+                        isFavourite = favourites.contains(product.id),
+                        onFavouriteClick = { onFavouriteClick(product.id) }
+                    )
                     CustomButton(title = "Add to cart")
                 }
             }

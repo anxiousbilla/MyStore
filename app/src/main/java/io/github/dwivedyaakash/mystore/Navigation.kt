@@ -29,6 +29,7 @@ import io.github.dwivedyaakash.mystore.ui.screens.CartScreen
 import io.github.dwivedyaakash.mystore.ui.screens.HomeScreen
 import io.github.dwivedyaakash.mystore.ui.screens.ProfileScreen
 import io.github.dwivedyaakash.mystore.ui.screens.WishlistScreen
+import io.github.dwivedyaakash.mystore.viewModel.StoreUiState
 import io.github.dwivedyaakash.mystore.viewModel.StoreViewModel
 
 enum class Screens(val title: String, val route: String, val icon: ImageVector) {
@@ -42,7 +43,8 @@ enum class Screens(val title: String, val route: String, val icon: ImageVector) 
 fun Navigation(
     navController: NavHostController,
     innerPadding: PaddingValues,
-    viewModel: StoreViewModel
+    viewModel: StoreViewModel,
+    uiState: StoreUiState
 ) {
     NavHost(
         modifier = Modifier
@@ -53,10 +55,10 @@ fun Navigation(
         startDestination = Screens.Home.route
     ) {
         composable(route = Screens.Home.route) {
-            HomeScreen(viewModel)
+            HomeScreen(viewModel, uiState)
         }
         composable(route = Screens.Wishlist.route) {
-            WishlistScreen()
+            WishlistScreen(viewModel, uiState)
         }
         composable(route = Screens.Cart.route) {
             CartScreen()

@@ -13,7 +13,9 @@ data class StoreUiState(
     val products: List<Product> = emptyList(),
     val product: Product? = null,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val favourites: MutableList<Int> = mutableListOf(),
+    val favouriteProducts: List<Product> = emptyList(),
 )
 
 class StoreViewModel : ViewModel() {
@@ -21,6 +23,7 @@ class StoreViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(StoreUiState())
     val uiState: StateFlow<StoreUiState> = _uiState.asStateFlow()
+
 
     init {
         loadStore()
@@ -54,6 +57,38 @@ class StoreViewModel : ViewModel() {
                         _uiState.value.copy(isLoading = false, errorMessage = exception.message)
                 }
         }
+    }
+
+    fun getFavouriteProducts() {
+        val favouriteProducts = mutableListOf<Product>()
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+
+            uiState.value.favourites.map {
+                repository.getProductById(it.toString())
+                    .onSuccess { product ->
+                        favouriteProducts.add(product)
+                    }
+                    .onFailure { exception ->
+                        _uiState.value =
+                            _uiState.value.copy(isLoading = false, errorMessage = exception.message)
+                    }
+            }
+
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, favouriteProducts = favouriteProducts)
+        }
+    }
+
+    fun addFavourite(id: Int) {
+        _uiState.value =
+            _uiState.value.copy(favourites = (_uiState.value.favourites + id) as MutableList<Int>)
+    }
+
+    fun removeFavourite(id: Int) {
+        _uiState.value =
+            _uiState.value.copy(favourites = (_uiState.value.favourites - id) as MutableList<Int>)
     }
 
 }
