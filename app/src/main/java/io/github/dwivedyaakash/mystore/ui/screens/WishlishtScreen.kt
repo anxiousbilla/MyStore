@@ -14,7 +14,7 @@ import io.github.dwivedyaakash.mystore.viewModel.StoreViewModel
 @Composable
 fun WishlistScreen(viewModel: StoreViewModel, uiState: StoreUiState) {
 
-    LaunchedEffect(uiState.favouriteProducts) {
+    LaunchedEffect(uiState.favourites) {
         viewModel.getFavouriteProducts()
     }
 
@@ -31,7 +31,8 @@ fun WishlistScreen(viewModel: StoreViewModel, uiState: StoreUiState) {
         ProductsGrid(
             products = uiState.favouriteProducts,
             favourites = uiState.favourites,
-            onFavouriteClick = { id -> onFavouriteClick(id) }
+            onFavouriteClick = { id -> onFavouriteClick(id) },
+            addToCart = { id -> viewModel.addToCart(id) }
         )
     }
 

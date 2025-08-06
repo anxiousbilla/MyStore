@@ -61,7 +61,7 @@ fun Navigation(
             WishlistScreen(viewModel, uiState)
         }
         composable(route = Screens.Cart.route) {
-            CartScreen()
+            CartScreen(viewModel, uiState)
         }
         composable(route = Screens.Profile.route) {
             ProfileScreen()

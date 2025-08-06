@@ -37,7 +37,8 @@ fun ProductCard(product: Product, isFavourite: Boolean, onFavouriteClick: () -> 
         Column {
             AsyncImage(
                 modifier = Modifier
-                    .height(200.dp)
+                    .height(150.dp)
+                    .fillMaxWidth()
                     .padding(8.dp),
                 model = product.image,
                 contentDescription = product.title

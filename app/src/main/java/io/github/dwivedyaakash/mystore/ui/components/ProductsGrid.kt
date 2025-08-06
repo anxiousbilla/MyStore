@@ -21,7 +21,8 @@ import io.github.dwivedyaakash.mystore.model.Product
 fun ProductsGrid(
     products: List<Product>,
     favourites: MutableList<Int>,
-    onFavouriteClick: (id: Int) -> Unit
+    onFavouriteClick: (id: Int) -> Unit,
+    addToCart: (id: Int) -> Unit
 ) {
 
     LazyVerticalGrid(
@@ -45,7 +46,7 @@ fun ProductsGrid(
                         isFavourite = favourites.contains(product.id),
                         onFavouriteClick = { onFavouriteClick(product.id) }
                     )
-                    CustomButton(title = "Add to cart")
+                    CustomButton(title = "Add to cart", onClick = { addToCart(product.id) })
                 }
             }
         }

@@ -16,6 +16,8 @@ data class StoreUiState(
     val errorMessage: String? = null,
     val favourites: MutableList<Int> = mutableListOf(),
     val favouriteProducts: List<Product> = emptyList(),
+    val cartItemCounts: MutableMap<Int, Int> = mutableMapOf(),
+    val cartProducts: List<Product> = emptyList()
 )
 
 class StoreViewModel : ViewModel() {
@@ -89,6 +91,58 @@ class StoreViewModel : ViewModel() {
     fun removeFavourite(id: Int) {
         _uiState.value =
             _uiState.value.copy(favourites = (_uiState.value.favourites - id) as MutableList<Int>)
+    }
+
+    fun getCartProducts() {
+        val cartProducts = mutableListOf<Product>()
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+
+            uiState.value.cartItemCounts.keys.map {
+                repository.getProductById(it.toString())
+                    .onSuccess { product ->
+                        cartProducts.add(product)
+                    }
+                    .onFailure { exception ->
+                        _uiState.value =
+                            _uiState.value.copy(isLoading = false, errorMessage = exception.message)
+                    }
+            }
+
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, cartProducts = cartProducts)
+        }
+    }
+
+    fun addToCart(id: Int) {
+        val currentUiState = _uiState.value
+        val currentCartItemCounts = currentUiState.cartItemCounts.toMutableMap()
+        val currentCount = currentCartItemCounts[id] ?: 0
+
+        if (currentCount > 0) currentCartItemCounts[id] = currentCount + 1
+        else currentCartItemCounts[id] = 1
+
+        _uiState.value = currentUiState.copy(cartItemCounts = currentCartItemCounts)
+    }
+
+    fun removeItemFromCart(id: Int) {
+        val currentUiState = _uiState.value
+        val currentCartItemCounts = currentUiState.cartItemCounts.toMutableMap()
+        val currentCount = currentCartItemCounts[id] ?: 0
+
+        if (currentCount > 1) currentCartItemCounts[id] = currentCount - 1
+        else currentCartItemCounts.remove(id)
+
+        _uiState.value = currentUiState.copy(cartItemCounts = currentCartItemCounts)
+    }
+
+    fun deleteAllItemsFromCart(id: Int) {
+        val currentUiState = _uiState.value
+        val currentCartItemCounts = currentUiState.cartItemCounts.toMutableMap()
+
+        currentCartItemCounts.remove(id)
+        _uiState.value = currentUiState.copy(cartItemCounts = currentCartItemCounts)
     }
 
 }

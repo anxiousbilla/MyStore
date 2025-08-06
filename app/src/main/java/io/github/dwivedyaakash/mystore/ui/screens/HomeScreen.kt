@@ -26,7 +26,8 @@ fun HomeScreen(viewModel: StoreViewModel, uiState: StoreUiState) {
         ProductsGrid(
             products = uiState.products,
             favourites = uiState.favourites,
-            onFavouriteClick = { id -> onFavouriteClick(id) }
+            onFavouriteClick = { id -> onFavouriteClick(id) },
+            addToCart = { id -> viewModel.addToCart(id) }
         )
     }
 
